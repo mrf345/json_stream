@@ -1,9 +1,20 @@
 # json_stream 0.1 beta
-### jQuery based script to monitor and fetch JSON feed upon change.
+### [jQuery][1cad23e5] based script to monitor and fetch JSON feed upon change.
+
+  [1cad23e5]: https://jquery.com "jQuery website"
 
 ## Features :
 - Apply jQuery UI effects whenever elements change.
 - Execute inserted function whenever elements change.
+
+## [Live Demo][c3246bd6]
+
+  [c3246bd6]: https://audio-sequence.github.io/json_stream.html "Live demo"
+#### - Credit: In this example, i am using [Fixer][2a766f21] API to get the latest exchange rates
+
+  [2a766f21]: http://fixer.io "Fixer API website"
+
+![Demo GIF](https://audio-sequence.github.io/json_stream.gif)
 
 ## Setup :
 
