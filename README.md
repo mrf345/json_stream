@@ -1,4 +1,4 @@
-# json_stream 0.1 beta
+# json_stream (Beta)
 ### [jQuery][1cad23e5] based script to monitor and fetch JSON feed upon change.
 
   [1cad23e5]: https://jquery.com "jQuery website"
@@ -23,7 +23,7 @@
   <script src="json_stream.js" type="text/javascript"></script>
   <script type="text/javascript">
   $(document).ready(function () {
-    var stream = json_stream({
+    const stream = JsonStream({
       url: 'http://127.0.0.1:5000/', // REST server url
       data_attr: 'stream', // Attribute in-which json property name is put
       watch_class: '.watch', // CSS class to identify elements that will be updated on change
@@ -86,7 +86,7 @@ this.options = {
 
 ## Useful functions :
 #### To use any of the following functions, you have to get an instance of the constructor, which we did in the Setup section :
-` var stream = json_stream()` </br>
+` const stream = json_stream()` </br>
 ` stream.following_functions()`
 
 #### - Log and status :
@@ -112,7 +112,7 @@ this.exit = function exit () {
 ## List of jQuery UI effects :
 
 ```javascript
-var effects = [
+const effects = [
   // jquery ui effects
   'blind', 'bounce', 'clip',
   'drop', 'explode', 'fade',

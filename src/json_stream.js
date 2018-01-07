@@ -1,6 +1,7 @@
 /* global $, alert */ // to avoide linter false alarm
 
 /*
+
 Script : json_stream 0.1 beta
 Author : Mohamed Feddad
 Date : 2017/12/26
@@ -8,53 +9,46 @@ Source : https://github.com/mrf345/json_stream
 License: MPL 2.0
 Dependencies: Jquery, Jquery UI (optional)
 Today's lesson: Not everyday you learn a lesson !
-*/
 
-  // ========================================================== //
- // TODO : All my to-dos are done. Missing any ? suggest them. //
-// ========================================================== //
-
-/*
- This Source Code Form is subject to the terms of the Mozilla Public
+ * This Source Code Form is subject to the terms of the Mozilla Public
  * License, v. 2.0. If a copy of the MPL was not distributed with this
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
+
  */
 
-// Pythonic and validation functions
-
-var checkType = function checkType (type, args) {
-  // checking the type of each varible in the passed array
-  for (var a in args) {
-    if (typeof args[a] !== type) return false
+const JsonStream = function jsonStream (options) {
+  // Pythonic and validation functions
+  const checkType = function checkType (type, args) {
+    // checking the type of each varible in the passed array
+    for (let a in args) {
+      if (typeof args[a] !== type) return false
+    }
+    return true
   }
-  return true
-}
-var checkBool = function checkBool (args) {
-  // check if passed args are 'true' or 'false' type
-  for (var a in args) {
-    if (args[a] !== 'true' && args[a] !== 'false') return false
+  const checkBool = function checkBool (args) {
+    // check if passed args are 'true' or 'false' type
+    for (let a in args) {
+      if (args[a] !== 'true' && args[a] !== 'false') return false
+    }
+    return true
   }
-  return true
-}
-var choice = function choice (list) {
-// to chose randomly from an Array
-  if (!(list instanceof Array)) throw new TypeError('choice() taskes only Arrays')
-  if (list.length <= 0) throw new Error('choice() requires pupliated Array')
-  var powerOfLength = Math.floor(list.length / 10)
-  if (powerOfLength <= 0) powerOfLength = 1
-  return list[Math.floor(Math.random() * (10 * powerOfLength))]
-}
+  const choice = function choice (list) {
+  // to chose randomly from an Array
+    if (!(list instanceof Array)) throw new TypeError('choice() taskes only Arrays')
+    if (list.length <= 0) throw new Error('choice() requires pupliated Array')
+    let powerOfLength = Math.floor(list.length / 10)
+    if (powerOfLength <= 0) powerOfLength = 1
+    return list[Math.floor(Math.random() * (10 * powerOfLength))]
+  }
+  const effects = [
+    // jquery UI motion effects
+    'blind', 'bounce', 'clip',
+    'drop', 'explode', 'fade',
+    'fold', 'highlight', 'puff',
+    'pulsate', 'scale', 'shake',
+    'size', 'slide'
+  ]
 
-var effects = [
-  // jquery UI motion effects
-  'blind', 'bounce', 'clip',
-  'drop', 'explode', 'fade',
-  'fold', 'highlight', 'puff',
-  'pulsate', 'scale', 'shake',
-  'size', 'slide'
-]
-
-var json_stream = function jsonStream (options) {
   // Home of the json stream
   if (!window.jQuery) throw new Error('json_stream() depends on jquery, go get it') // jquery early check
   if (typeof options !== 'object') options = {}
@@ -143,11 +137,11 @@ var json_stream = function jsonStream (options) {
 
   this.watch_them = function watchThem (watch = this.defaults.watch, dattr = this.options.data_attr) {
     // updating elements with json feed, if it changes and looping it with a duration
-    var inter = setInterval(function () {
+    let inter = setInterval(function () {
       $.getJSON(this.options.url,
         function (response) {
           $.each(watch, function (n, elemenT) { // looping through parsed elements
-            var elemenTName = $(elemenT).attr(dattr)
+            let elemenTName = $(elemenT).attr(dattr)
             if (isProperty(response, elemenTName) && getProperty(response, elemenTName).toString() !== $(elemenT).html()) {
               $(elemenT).html(getProperty(response, elemenTName)) // if it change, set the new feed
             }
@@ -166,14 +160,14 @@ var json_stream = function jsonStream (options) {
     repeats = this.options.effect_repeats,
     eduration = this.options.effect_duration,
     dattr = this.options.data_attr) {
-    var inter = setInterval(function () {
+    let inter = setInterval(function () {
       $.getJSON(this.options.url, function (response) {
         $.each(watch, function (n, elemenT) {
           var elemenTName = $(elemenT).attr(dattr)
           if (isProperty(response, elemenTName) && getProperty(response, elemenTName).toString() !== $(elemenT).html()) {
             $(elemenT).html(getProperty(response, elemenTName)) // updating the elemnt if the content changes
             $(elemenT).toggle(effect, {}, eduration)
-            var tokill = [] // to store setTimeouts in, to kill them later
+            const tokill = [] // to store setTimeouts in, to kill them later
             tokill.push(setTimeout(function effe (counter = 0, rdur = eduration) {
               // sequanced time outs with recursion to achieve proper repeating
               if (repeats > 1) var newRepeat = (repeats * 2) - 1; else newRepeat = repeats
@@ -193,11 +187,11 @@ var json_stream = function jsonStream (options) {
   this.do_them = function doThem (watch = this.defaults.doit,
     // updating elements with json feed and executing inserted function upon change
     todo = this.options.todo, dattr = this.options.data_attr) {
-    var inter = setInterval(function () {
+    let inter = setInterval(function () {
       $.getJSON(this.options.url,
         function (response) {
           $.each(watch, function (n, elemenT) {
-            var elemenTName = $(elemenT).attr(dattr)
+            let elemenTName = $(elemenT).attr(dattr)
             if (isProperty(response, elemenTName) && getProperty(response, elemenTName).toString() !== $(elemenT).html()) {
               $(elemenT).html(getProperty(response, elemenTName)) // update it
               setTimeout(todo, 0) // execute the inserted function
@@ -211,7 +205,7 @@ var json_stream = function jsonStream (options) {
 
 // Dealing with elements
 
-  var isProperty = function splitCheck (response, name) {
+  const isProperty = function splitCheck (response, name) {
     // to check if the json recieved contains a property
     try {
       name = name.split('>')
@@ -222,7 +216,7 @@ var json_stream = function jsonStream (options) {
     }
   }
 
-  var getProperty = function equalPropery (response, name) {
+  const getProperty = function equalPropery (response, name) {
     // to get the value of a property
     try {
       name = name.split('>')
@@ -235,17 +229,18 @@ var json_stream = function jsonStream (options) {
 
   this.parse = function parse () {
     // parsing with elements identifiers and storing them in defaults lists
-    var l; for (var opt in l = [
+    const list = []
+    let l; for (let opt in l = [
       this.options.watch_class,
       this.options.do_class,
       this.options.effect_class]) { // looping through identifiers
-      var list = []
       $(l[opt]).each(function () {
         list.push(this) // storing elements that match identifers
       }) // correct destination
       if (opt === '0') this.defaults.watch = this.defaults.watch.concat(list)
       if (opt === '1') this.defaults.doit = this.defaults.doit.concat(list)
       if (opt === '2') this.defaults.effect = this.defaults.effect.concat(list)
+      list.splice(0, list.length)
     }
     list.splice(0, list.length) // clear list
   }
@@ -281,7 +276,8 @@ var json_stream = function jsonStream (options) {
       this.defaults.effect,
       this.defaults.doit
     ], function (n, value) {
-      if (n === 0) var name = 'Watch it :'; else if (
+      let name
+      if (n === 0) name = 'Watch it :'; else if (
         n === 1) name = 'Effect it :'; else name = 'Do it :'
       console.log(name)
       console.log(value)
