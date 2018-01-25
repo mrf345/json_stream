@@ -1,0 +1,36 @@
+{
+  "name": "@mrf3/json_stream",
+  "version": "0.0.3",
+  "description": "monitor and fetch JSON feed with jquery-ui effects upon change.",
+  "main": "src/json_stream.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mrf345/json_stream.git"
+  },
+  "keywords": [
+    "JSON",
+    "stream",
+    "effects",
+    "fetch",
+    "jquery",
+    "jquery-ui"
+  ],
+  "author": "Mohamed Feddad",
+  "license": "MPL-2.0",
+  "bugs": {
+    "url": "https://github.com/mrf345/json_stream/issues"
+  },
+  "homepage": "https://github.com/mrf345/json_stream#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-minify-webpack-plugin": "^0.2.0",
+    "webpack": "^3.10.0"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "jquery-ui-bundle": "^1.12.1"
+  }
+}

@@ -16,48 +16,69 @@
 
 ![Demo GIF](https://audio-sequence.github.io/json_stream.gif)
 
-## Setup :
 
+## Setup example:
+#### - With NPM:
+```bash
+npm install --save @mrf3/json_stream
+```
+```javascript
+import JsonStream from 'json_stream'
+window.addEventListener('load', () => {
+  const stream = JsonStream({
+    // ... options
+    url: 'http://127.0.0.1:5000/',
+    data_attr: 'stream',
+    use_effect: 'true',
+    effect: 'fade'
+    // ...
+  })  
+}
+```
+
+### - With browser:
 ```html
 <head>
-  <script src="json_stream.js" type="text/javascript"></script>
+  <script type="text/javascript"
+    src="https://rawgit.com/mrf345/json_stream/master/bin/bundle.js">
+  </script>
   <script type="text/javascript">
-  $(document).ready(function () {
-    const stream = JsonStream({
-      url: 'http://127.0.0.1:5000/', // REST server url
-      data_attr: 'stream', // Attribute in-which json property name is put
-      watch_class: '.watch', // CSS class to identify elements that will be updated on change
-      effect_class: '.effect', // CSS class to identify elements that will be updated with jQuery UI effects
-      use_effect: 'true', // to allow the use of effects
-      do_class: '.do', // CSS class to identify elements that will be updated and have the inserted function executed
-      use_do: 'true', // to allow for executing function
-      todo: function () { alert('Has changed !') } // function to be executed on do_class elements change
-     })
+  window.addEventListener('load', () => {
+    JsonStream({
+      // ... options
+      url: 'http://127.0.0.1:5000/',
+      data_attr: 'stream',
+      use_effect: 'true',
+      effect: 'fade'
+      // ... options
+    })
   })
   </script>
 </head>
-<body>
-  <!-- Assuming that we will receive a JSON object of the following properties :
-  {first: 'The first one',
+```
+
+
+#### - The body
+- Assuming that we will receive a JSON object of the following properties :
+
+```javascript
+{
+  first: 'The first one',
   second: {
     name: 'some name',
     details: {
       address: 'some address',
       tel: 'telephone'
     }
-  },
-  third: 'The third one'}
-  -->
-  <h1 stream='first' class='watch'>
+  }
+}
+```
+```html
+<body>
+  <h1 stream='first' class='effectit'>
     First to be changed
   </h1>
-  <h1 stream='second>name' class='effect'>
-    Second to be changed with effects
-  </h1>
-  <h1 stream='third' class='do'>
-    Third to be changed with alert()
-  </h1>
-  <h1 stream='second>details>address' class='watch'>
+  <h1 stream='second>details>address' class='effectit'>
     To be changed too
   </h1>
 </body>
@@ -85,8 +106,8 @@ this.options = {
 ```
 
 ## Useful functions :
-#### To use any of the following functions, you have to get an instance of the constructor, which we did in the Setup section :
-` const stream = json_stream()` </br>
+#### To use any of the following functions, you have to get an instance of the module, which we did in the Setup section :
+` const stream = JsonStream()` </br>
 ` stream.following_functions()`
 
 #### - Log and status :
