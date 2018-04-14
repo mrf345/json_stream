@@ -1,6 +1,6 @@
 {
   "name": "@mrf3/json_stream",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "description": "monitor and fetch JSON feed with jquery-ui effects upon change.",
   "main": "src/json_stream.js",
   "scripts": {

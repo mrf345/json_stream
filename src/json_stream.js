@@ -36,7 +36,9 @@ export default function JsonStream (options) {
         console.log(data)
       }
     }, // function to be applied on update
-    do_class: options.do_class || '.doit' // class assigned to elements wanted to be watched with specific function
+    do_class: options.do_class || '.doit', // class assigned to elements wanted to be watched with specific function
+    ensure_class: options.ensure_class || 'ensureit', // class assigned to elements which will be ensured to update with other values
+    ensure_value: options.ensure_value || 'id' // value which will be checked in the json response to triger update instead of depending on the default content change
   }
 
   returnit.defaults = {
@@ -100,15 +102,13 @@ export default function JsonStream (options) {
       error: function () { throw new Error('json_stream() cannot reach to the server !') }
     })
     $(document).ready(function () {
-      returnit.parse() // pasrsing elements accourding to the classes
-      // TODO: Add call back function to returnit.parse() to lunch loops
-      // lunching the loops
-      setTimeout(() => {
+      returnit.parse(() => {
+        // lunching the loops
         if (returnit.options.use_watch === 'true') watchThem()
         if (returnit.options.use_effect === 'true') effectThem()
         if (returnit.options.use_do === 'true') doThem()
         if (returnit.options.use_effect_do == 'true') effectThem(true)
-      }, 500)
+      }) // pasrsing elements accourding to the classes
     })
   }
 
@@ -123,7 +123,7 @@ export default function JsonStream (options) {
             let result = getProperty(
               response,
               $(elemenT).attr(returnit.options.data_attr)) // obj>obj>.. geting element property
-            if (result) if (result.toString() !== $(elemenT).html()) $(elemenT).html(result)
+            if (result) if (result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) $(elemenT).html(result)
           }) // if it change, set the new feed
         })
     }, returnit.options.duration) // looping with the inserted duration
@@ -140,7 +140,7 @@ export default function JsonStream (options) {
         let loopin = doit ? returnit.defaults.effectdo : returnit.defaults.effect
         loopin.forEach((elemenT, n) => {
           let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
-          if (result && result.toString() !== $(elemenT).html()) {
+          if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
             $(elemenT).html(result) // updating the elemnt if the content changes
             if (doit) returnit.options.todo(response) // executing doit function if allowed
             $(elemenT).toggle(returnit.options.effect, {}, returnit.options.effect_duration)
@@ -174,7 +174,7 @@ export default function JsonStream (options) {
         function (response) {
           returnit.defaults.doit.forEach((elemenT, n) => {
             let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
-            if (result && result.toString() !== $(elemenT).html()) {
+            if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
               $(elemenT).html(result)
               returnit.options.todo(response)
             }
@@ -195,7 +195,13 @@ export default function JsonStream (options) {
     return response
   }
 
-  returnit.parse = function parse () {
+  const checkEnsure = function checkEnsure (element, ensures) {
+    // to check if element has ensure and if it has changed
+    if ($(element).attr('ensureval')) return $(element).attr('ensureval') === ensures ? false : true
+    else return false
+  }
+
+  returnit.parse = function parse (callback=() => {}) {
     // parsing with elements identifiers and storing them in defaults lists
     const list = []
     const classes = [
@@ -206,6 +212,7 @@ export default function JsonStream (options) {
     ]
     classes.forEach((value, index) => {
       $(value).each(function () {
+        if ($(this).hasClass(returnit.options.ensure_class)) $(this).attr('ensureval', value='0') // adding default ensure value if it's ensured
         list.push(this) // storing elements that match identifers
       }) // correct destination
       if (index === 0) returnit.defaults.watch = returnit.defaults.watch.concat(list)
@@ -215,6 +222,7 @@ export default function JsonStream (options) {
       list.splice(0, list.length)
     })
     list.splice(0, list.length) // clear list
+    callback() // lunch the loops after parsing is done
   }
 
   const clearParse = function clearParse () {
