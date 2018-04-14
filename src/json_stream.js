@@ -146,7 +146,11 @@ export default function JsonStream (options) {
           let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
           if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
             // updating ensureval if not matching, otherwise endless loop
-            if ($(elemenT).attr('ensureval')) $(elemenT).attr('ensureval', value=getProperty(response, returnit.options.ensure_value))
+            if ($(elemenT).attr('ensureval')) {
+              let uniVal = getProperty(response, returnit.options.ensure_value)
+              console.log(uniVal)
+              $(elemenT).attr('ensureval', value=uniVal)
+            }
             $(elemenT).html(result) // updating the elemnt if the content changes
             if (doit) returnit.options.todo(response) // executing doit function if allowed
             $(elemenT).toggle(returnit.options.effect, {}, returnit.options.effect_duration)
