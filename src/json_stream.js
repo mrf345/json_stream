@@ -27,6 +27,8 @@ export default function JsonStream (options) {
     effect_repeats: options.effect_repeats || 1, // number of times repeating the motion effect
     effect_duration: options.effect_duraton || 1000, // the duration of motion effect
     effect_class: options.effect_class || '.effectit', // class assigned to elements wanted to be watched with motion effects
+    effect_do_class: options.effect_do_class || '.effectdoit', // class assigned to element wanted to be watched with motion effect and todo function executed
+    use_effect_do: options.use_effect_do || 'false', // to activate watch elments change with effects and function execution
     use_do: options.use_do || 'false', // to activiate watch elments and update with applying specific function on each update
     todo: options.todo || function (data) {
       if (data) { // data is the json response passed to the function by default
@@ -41,9 +43,11 @@ export default function JsonStream (options) {
     watch: [], // where list of parsed elments wiht watch_class are stored
     effect: [], // where list of parsed elements with effect_effect are stored
     doit: [], // where list of parsed elemts with do_clas are sotred
+    effectdo: [], // where list of parsed elements with effect_do are stored
     watch_loop: false, // watchThem() loop
     effect_loop: false, // effectThem() loop
-    do_loop: false // doThem() loop
+    do_loop: false, // doThem() loop
+    effectdo_loop: false // effectThem(doit=true) loop
   }
 
   const __init__ = function __init__ () {
@@ -57,7 +61,9 @@ export default function JsonStream (options) {
       returnit.options.effect,
       returnit.options.use_do,
       returnit.options.effect_class,
-      returnit.options.do_class
+      returnit.options.do_class,
+      returnit.options.use_effect_do,
+      returnit.options.effect_do_class
     ])) throw new TypeError('json_stream(options) requires string')
     // numbers
     if (!exFunctions.checkType('number', [
@@ -72,6 +78,7 @@ export default function JsonStream (options) {
     if (!exFunctions.checkBool([
       returnit.options.use_watch,
       returnit.options.use_effect,
+      returnit.options.use_effect_do,
       returnit.options.use_do])) throw new TypeError('json_stream(options) use require "true" or "false"')
 
   // value validation
@@ -94,11 +101,13 @@ export default function JsonStream (options) {
     })
     $(document).ready(function () {
       returnit.parse() // pasrsing elements accourding to the classes
+      // TODO: Add call back function to returnit.parse() to lunch loops
       // lunching the loops
       setTimeout(() => {
         if (returnit.options.use_watch === 'true') watchThem()
         if (returnit.options.use_effect === 'true') effectThem()
         if (returnit.options.use_do === 'true') doThem()
+        if (returnit.options.use_effect_do == 'true') effectThem(true)
       }, 500)
     })
   }
@@ -122,16 +131,18 @@ export default function JsonStream (options) {
     else returnit.defaults.watch_loop = inter // storring new loop
   }
 
-  const effectThem = function effectThem () {
+  const effectThem = function effectThem (doit=false) {
   // updating elments with jason feed, and applying selected effects with timeout
   // sequance to achieve proper repeating effect
 
     let inter = setInterval(function () {
       $.getJSON(returnit.options.url, response => {
-        returnit.defaults.effect.forEach((elemenT, n) => {
+        let loopin = doit ? returnit.defaults.effectdo : returnit.defaults.effect
+        loopin.forEach((elemenT, n) => {
           let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
           if (result && result.toString() !== $(elemenT).html()) {
             $(elemenT).html(result) // updating the elemnt if the content changes
+            if (doit) returnit.options.todo(response) // executing doit function if allowed
             $(elemenT).toggle(returnit.options.effect, {}, returnit.options.effect_duration)
             const tokill = [] // to store setTimeouts in, to kill them later
             tokill.push(setTimeout(function effe (counter = 0) {
@@ -149,8 +160,11 @@ export default function JsonStream (options) {
         })
       })
     }, returnit.options.duration) // looping with the inserted duration
-    if (returnit.defaults.effect_loop) clearInterval(returnit.defaults.effect_loop) // clearing previous loop
-    else returnit.defaults.effect_loop = inter // storring new loop
+    if (doit) { // if doit is used
+      returnit.defaults.effectdo_loop ? clearInterval(returnit.defaults.effectdo_loop) : returnit.defaults.effectdo_loop = inter // clearing or storring new loop
+    } else { // if normal effectit
+      returnit.defaults.effect_loop ? clearInterval(returnit.defaults.effect_loop) : returnit.defaults.effect_loop = inter // clearing or storring new loop
+    }
   }
 
   const doThem = function doThem () {
@@ -187,7 +201,9 @@ export default function JsonStream (options) {
     const classes = [
       returnit.options.watch_class,
       returnit.options.do_class,
-      returnit.options.effect_class]
+      returnit.options.effect_class,
+      returnit.options.effect_do_class
+    ]
     classes.forEach((value, index) => {
       $(value).each(function () {
         list.push(this) // storing elements that match identifers
@@ -195,6 +211,7 @@ export default function JsonStream (options) {
       if (index === 0) returnit.defaults.watch = returnit.defaults.watch.concat(list)
       if (index === 1) returnit.defaults.doit = returnit.defaults.doit.concat(list)
       if (index === 2) returnit.defaults.effect = returnit.defaults.effect.concat(list)
+      if (index === 3) returnit.defaults.effectdo = returnit.defaults.effectdo.concat(list)
       list.splice(0, list.length)
     })
     list.splice(0, list.length) // clear list
@@ -205,7 +222,9 @@ export default function JsonStream (options) {
     $.each([
       returnit.defaults.watch,
       returnit.defaults.doit,
-      returnit.defaults.effect], function (k, list) {
+      returnit.defaults.effect,
+      returnit.defaults.effectdo
+    ], function (k, list) {
       list.splice(0, list.length) // clear each
     })
   }
@@ -217,7 +236,9 @@ export default function JsonStream (options) {
     $.each([
       returnit.defaults.watch_loop,
       returnit.defaults.effect_loop,
-      returnit.defaults.doit_loop], function (n, value) {
+      returnit.defaults.doit_loop,
+      returnit.defaults.effectdo_loop
+    ], function (n, value) {
       if (value) clearInterval(value) // if not false, it is running
     })
   }
@@ -229,11 +250,13 @@ export default function JsonStream (options) {
     $.each([
       returnit.defaults.watch,
       returnit.defaults.effect,
-      returnit.defaults.doit
+      returnit.defaults.doit,
+      returnit.defaults.effectdo
     ], function (n, value) {
       let name
       if (n === 0) name = 'Watch it :'; else if (
-        n === 1) name = 'Effect it :'; else name = 'Do it :'
+        n === 1) name = 'Effect it :'; else if (
+        n === 2) name = 'Do it :'; else name = 'Effect Do it :'
       console.log(name)
       console.log(value)
     })
@@ -248,6 +271,8 @@ export default function JsonStream (options) {
     console.log('Effect is : ' + log)
     if (returnit.defaults.doit_loop) log = true; else log = false
     console.log('Do is : ' + log)
+    if (returnit.defaults.effectdo_loop) log = true; else log = false
+    console.log('Effect Do is : ' + log)
   }
 
 // We are done
