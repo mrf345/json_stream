@@ -157,7 +157,7 @@ export default function JsonStream (options) {
             let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
             if (result && result.toString() !== $(elemenT).html()) {
               $(elemenT).html(result)
-              returnit.options.todo()
+              returnit.options.todo(data=response)
             }
           })
         })
