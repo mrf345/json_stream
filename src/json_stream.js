@@ -123,7 +123,11 @@ export default function JsonStream (options) {
             let result = getProperty(
               response,
               $(elemenT).attr(returnit.options.data_attr)) // obj>obj>.. geting element property
-            if (result) if (result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) $(elemenT).html(result)
+            if (result) if (result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
+              // updating ensureval if not matching, otherwise endless loop
+              if ($(elemenT).attr('ensureval')) $(elemenT).attr('ensureval', value=getProperty(response, returnit.options.ensure_value))
+              $(elemenT).html(result)
+            }
           }) // if it change, set the new feed
         })
     }, returnit.options.duration) // looping with the inserted duration
@@ -141,6 +145,8 @@ export default function JsonStream (options) {
         loopin.forEach((elemenT, n) => {
           let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
           if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
+            // updating ensureval if not matching, otherwise endless loop
+            if ($(elemenT).attr('ensureval')) $(elemenT).attr('ensureval', value=getProperty(response, returnit.options.ensure_value))
             $(elemenT).html(result) // updating the elemnt if the content changes
             if (doit) returnit.options.todo(response) // executing doit function if allowed
             $(elemenT).toggle(returnit.options.effect, {}, returnit.options.effect_duration)
@@ -175,6 +181,8 @@ export default function JsonStream (options) {
           returnit.defaults.doit.forEach((elemenT, n) => {
             let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
             if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
+              // updating ensureval if not matching, otherwise endless loop
+              if ($(elemenT).attr('ensureval')) $(elemenT).attr('ensureval', value=getProperty(response, returnit.options.ensure_value))
               $(elemenT).html(result)
               returnit.options.todo(response)
             }
