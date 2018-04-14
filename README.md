@@ -87,7 +87,7 @@ window.addEventListener('load', () => {
 ## Options :
 
 ```javascript
-this.options = {
+options = {
   url: options.url || '/', // url to get the json feed
   request_type: options.request_type || 'GET', // http request method to use in ajax
   duration: options.duration * 1000 || 2000, // duration of sleep between each response check
@@ -95,15 +95,17 @@ this.options = {
   use_watch: options.use_watch || 'true', // to activate watch elements change and update
   watch_class: options.watch_class || '.watchit', // class assigned to elements wanted to be watched
   use_effect: options.use_effect || 'false', // to activate watch elements change with updates and jquery UI effects
-  effect: options.effect || choice(effects), // motion effect to use upon data update. Default is randomly chosen
+  effect: options.effect || exFunctions.choice(exFunctions.effects), // motion effect to use upon data update. Default is randomly chosen
   effect_repeats: options.effect_repeats || 1, // number of times repeating the motion effect
   effect_duration: options.effect_duraton || 1000, // the duration of motion effect
   effect_class: options.effect_class || '.effectit', // class assigned to elements wanted to be watched with motion effects
   use_do: options.use_do || 'false', // to activiate watch elments and update with applying specific function on each update
-  todo: options.todo || function () { 
-      alert('JSON Streams !')
-      console.log(data) // JSON response is add as argument named data
-    }, // function to be applied on update
+  todo: options.todo || function (data) {
+    if (data) { // data is the json response passed to the function by default
+      alert('Got fetched !')
+      console.log(data)
+    }
+  }, // function to be applied on update
   do_class: options.do_class || '.doit' // class assigned to elements wanted to be watched with specific function
 }
 ```

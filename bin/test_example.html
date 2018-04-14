@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>JSONStream test</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="bundle.js" type="text/javascript"></script>
+    <style>
+        div {
+            height: 890px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        h1 {
+            flex: 1;
+            text-align: center;
+            font-size: 200%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+    </style>
+    <script type='text/javascript'>
+        var stream = JsonStream({
+            url: 'https://jsonplaceholder.typicode.com/posts/1',
+            use_do: 'true',
+            todo: function (data) {
+                console.log('Do something else : ')
+                console.log(data)
+            }
+        })
+    </script>
+</head>
+<body>
+    <div>
+        <h1 class='doit' jsonstream='body'>
+            Soon to be fetched !
+        </h1>
+    </div>
+</body>
+</html>

@@ -28,7 +28,12 @@ export default function JsonStream (options) {
     effect_duration: options.effect_duraton || 1000, // the duration of motion effect
     effect_class: options.effect_class || '.effectit', // class assigned to elements wanted to be watched with motion effects
     use_do: options.use_do || 'false', // to activiate watch elments and update with applying specific function on each update
-    todo: options.todo || function () { alert('JSON Streams !') }, // function to be applied on update
+    todo: options.todo || function (data) {
+      if (data) { // data is the json response passed to the function by default
+        alert('Got fetched !')
+        console.log(data)
+      }
+    }, // function to be applied on update
     do_class: options.do_class || '.doit' // class assigned to elements wanted to be watched with specific function
   }
 
@@ -157,7 +162,7 @@ export default function JsonStream (options) {
             let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
             if (result && result.toString() !== $(elemenT).html()) {
               $(elemenT).html(result)
-              returnit.options.todo(data=response)
+              returnit.options.todo(response)
             }
           })
         })
