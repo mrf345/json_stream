@@ -49,7 +49,8 @@ export default function JsonStream (options) {
     watch_loop: false, // watchThem() loop
     effect_loop: false, // effectThem() loop
     do_loop: false, // doThem() loop
-    effectdo_loop: false // effectThem(doit=true) loop
+    effectdo_loop: false, // effectThem(doit=true) loop
+    ensure_value: '0' // to store ensure new value
   }
 
   const __init__ = function __init__ () {
@@ -144,13 +145,10 @@ export default function JsonStream (options) {
         let loopin = doit ? returnit.defaults.effectdo : returnit.defaults.effect
         loopin.forEach((elemenT, n) => {
           let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
-          if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
+          let ensureVal = getProperty(response, returnit.options.ensure_value)
+          if (result && result.toString() !== $(elemenT).html() || ensureVal !== returnit.defaults.ensure_value) {
             // updating ensureval if not matching, otherwise endless loop
-            if ($(elemenT).attr('ensureval')) {
-              let uniVal = getProperty(response, returnit.options.ensure_value)
-              console.log(uniVal)
-              $(elemenT).attr('ensureval', value=uniVal)
-            }
+            if ($(elemenT).hasClass(returnit.options.ensure_class)) returnit.defaults.ensure_value = ensureVal
             $(elemenT).html(result) // updating the elemnt if the content changes
             if (doit) returnit.options.todo(response) // executing doit function if allowed
             $(elemenT).toggle(returnit.options.effect, {}, returnit.options.effect_duration)
