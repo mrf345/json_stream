@@ -124,9 +124,12 @@ export default function JsonStream (options) {
             let result = getProperty(
               response,
               $(elemenT).attr(returnit.options.data_attr)) // obj>obj>.. geting element property
-            if (result) if (result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
+            let ensureVal = getProperty(response, returnit.options.ensure_value)
+            let ensureInd = returnit.defaults.ensure_values[0].indexOf(elemenT)
+            let ensureQuer = returnit.defaults.ensure_values[1][ensureInd]
+            if (result && result.toString() !== $(elemenT).html() || ensureVal !== ensureQuer) {
               // updating ensureval if not matching, otherwise endless loop
-              if ($(elemenT).attr('ensureval')) $(elemenT).attr('ensureval', value=getProperty(response, returnit.options.ensure_value))
+              if ($(elemenT).hasClass(returnit.options.ensure_class)) returnit.defaults.ensure_values[1][ensureInd] = ensureVal
               $(elemenT).html(result)
             }
           }) // if it change, set the new feed
@@ -184,9 +187,12 @@ export default function JsonStream (options) {
         function (response) {
           returnit.defaults.doit.forEach((elemenT, n) => {
             let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
-            if (result && result.toString() !== $(elemenT).html() || checkEnsure(elemenT, getProperty(response, returnit.options.ensure_value))) {
+            let ensureVal = getProperty(response, returnit.options.ensure_value)
+            let ensureInd = returnit.defaults.ensure_values[0].indexOf(elemenT)
+            let ensureQuer = returnit.defaults.ensure_values[1][ensureInd]
+            if (result && result.toString() !== $(elemenT).html() || ensureVal !== ensureQuer) {
               // updating ensureval if not matching, otherwise endless loop
-              if ($(elemenT).attr('ensureval')) $(elemenT).attr('ensureval', value=getProperty(response, returnit.options.ensure_value))
+              if ($(elemenT).hasClass(returnit.options.ensure_class)) returnit.defaults.ensure_values[1][ensureInd] = ensureVal
               $(elemenT).html(result)
               returnit.options.todo(response)
             }
