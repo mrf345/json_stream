@@ -50,7 +50,7 @@ export default function JsonStream (options) {
     effect_loop: false, // effectThem() loop
     do_loop: false, // doThem() loop
     effectdo_loop: false, // effectThem(doit=true) loop
-    ensure_value: '0' // to store ensure new value
+    ensure_values: {} // to store ensure new values
   }
 
   const __init__ = function __init__ () {
@@ -146,9 +146,9 @@ export default function JsonStream (options) {
         loopin.forEach((elemenT, n) => {
           let result = getProperty(response, $(elemenT).attr(returnit.options.data_attr))
           let ensureVal = getProperty(response, returnit.options.ensure_value)
-          if (result && result.toString() !== $(elemenT).html() || ensureVal !== returnit.defaults.ensure_value) {
+          if (result && result.toString() !== $(elemenT).html() || ensureVal !== returnit.defaults.ensure_values[elemenT]) {
             // updating ensureval if not matching, otherwise endless loop
-            if ($(elemenT).hasClass(returnit.options.ensure_class)) returnit.defaults.ensure_value = ensureVal
+            if ($(elemenT).hasClass(returnit.options.ensure_class)) returnit.defaults.ensure_values[elemenT] = ensureVal
             $(elemenT).html(result) // updating the elemnt if the content changes
             if (doit) returnit.options.todo(response) // executing doit function if allowed
             $(elemenT).toggle(returnit.options.effect, {}, returnit.options.effect_duration)
@@ -222,7 +222,7 @@ export default function JsonStream (options) {
     ]
     classes.forEach((value, index) => {
       $(value).each(function () {
-        if ($(this).hasClass(returnit.options.ensure_class)) $(this).attr('ensureval', value='0') // adding default ensure value if it's ensured
+        if ($(this).hasClass(returnit.options.ensure_class)) returnit.defaults.ensure_values[this] = '0' // adding default ensure value if it's ensured
         list.push(this) // storing elements that match identifers
       }) // correct destination
       if (index === 0) returnit.defaults.watch = returnit.defaults.watch.concat(list)
