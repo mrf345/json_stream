@@ -213,11 +213,6 @@ export default function JsonStream (options) {
     return response
   }
 
-  const checkEnsure = function checkEnsure (element, ensures) {
-    // to check if element has ensure and if it has changed
-    if ($(element).attr('ensureval')) return $(element).attr('ensureval') === ensures ? false : true
-    else return false
-  }
 
   returnit.parse = function parse (callback=() => {}) {
     // parsing with elements identifiers and storing them in defaults lists

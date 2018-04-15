@@ -87,7 +87,7 @@ window.addEventListener('load', () => {
 ## Options :
 
 ```javascript
-options = {
+returnit.options = {
   url: options.url || '/', // url to get the json feed
   request_type: options.request_type || 'GET', // http request method to use in ajax
   duration: options.duration * 1000 || 2000, // duration of sleep between each response check
@@ -99,6 +99,8 @@ options = {
   effect_repeats: options.effect_repeats || 1, // number of times repeating the motion effect
   effect_duration: options.effect_duraton || 1000, // the duration of motion effect
   effect_class: options.effect_class || '.effectit', // class assigned to elements wanted to be watched with motion effects
+  effect_do_class: options.effect_do_class || '.effectdoit', // class assigned to element wanted to be watched with motion effect and todo function executed
+  use_effect_do: options.use_effect_do || 'false', // to activate watch elments change with effects and function execution
   use_do: options.use_do || 'false', // to activiate watch elments and update with applying specific function on each update
   todo: options.todo || function (data) {
     if (data) { // data is the json response passed to the function by default
@@ -106,7 +108,9 @@ options = {
       console.log(data)
     }
   }, // function to be applied on update
-  do_class: options.do_class || '.doit' // class assigned to elements wanted to be watched with specific function
+  do_class: options.do_class || '.doit', // class assigned to elements wanted to be watched with specific function
+  ensure_class: options.ensure_class || 'ensureit', // class assigned to elements which will be ensured to update with other values
+  ensure_value: options.ensure_value || 'id' // value which will be checked in the json response to triger update instead of depending on the default content change
 }
 ```
 
