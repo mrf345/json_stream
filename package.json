@@ -25,12 +25,18 @@
   },
   "homepage": "https://github.com/mrf345/json_stream#readme",
   "devDependencies": {
-    "babel-core": "^6.26.0",
-    "babel-minify-webpack-plugin": "^0.2.0",
-    "webpack": "^3.10.0"
+    "@babel/cli": "^7.7.5",
+    "@babel/core": "^7.7.5",
+    "@babel/polyfill": "^7.7.0",
+    "@babel/preset-env": "^7.7.6",
+    "@types/jest": "^24.0.23",
+    "babel-jest": "^24.9.0",
+    "babel-loader": "^8.0.6",
+    "webpack": "^4.41.2",
+    "webpack-cli": "^3.3.10"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
+    "jquery": "^3.4.1",
     "jquery-ui-bundle": "^1.12.1"
   }
 }

@@ -1,5 +1,4 @@
 const path = require('path')
-const Mini = require('babel-minify-webpack-plugin')
 
 module.exports = {
   entry: path.join(path.resolve(__dirname, 'src'), 'json_stream.js'),
@@ -10,7 +9,12 @@ module.exports = {
     libraryTarget: 'window',
     libraryExport: 'default'
   },
-  plugins: [
-    new Mini()
-  ]
+  plugins: [],
+  module: {
+    rules: [{
+      test: /\.js$/,
+      exclude: /node_modules/,
+      use: { loader: 'babel-loader' }
+    }]
+  }
 }

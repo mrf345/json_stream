@@ -1,3 +1,4 @@
+import '@babel/polyfill'
 import $ from 'jquery'
 import 'jquery-ui-bundle'
 import exFunctions from './exFunctions.js'
@@ -139,9 +140,10 @@ export default function JsonStream (options) {
     else returnit.defaults.watch_loop = inter // storring new loop
   }
 
-  const effectThem = function effectThem (doit=false) {
+  const effectThem = function effectThem (doit) {
   // updating elments with jason feed, and applying selected effects with timeout
   // sequance to achieve proper repeating effect
+    doit = doit || false
 
     let inter = setInterval(function () {
       $.getJSON(returnit.options.url, response => {
@@ -214,8 +216,10 @@ export default function JsonStream (options) {
   }
 
 
-  returnit.parse = function parse (callback=() => {}) {
+  returnit.parse = function parse (callback) {
     // parsing with elements identifiers and storing them in defaults lists
+    callback = callback || Function
+
     const list = []
     const classes = [
       returnit.options.watch_class,
